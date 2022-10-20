@@ -1,0 +1,61 @@
+{% load static %}
+
+<div class="bg-light mt-4 rounded">
+    <div class="rounded block_popular_header position-relative" style="background: url({% static 'img/popular_block.png' %});">
+        <h5 class="text-light position-absolute block_popular_header_text">Most popular Communities</h5>
+    </div>
+    
+    {% for top_user in view.get_top_users %}
+    
+    <div class="d-flex justify-content-between align-items-center m-3">
+        <div class="d-flex align-items-center">
+            <img src="{% static 'img/profile_icon.png' %}" class="profile_icon me-2">
+            <div class="popular_comunitie_people_contant">
+                <p class="text-dark margin-0 me-2">
+                    {{ top_user.username }}
+
+                    {% if top_user.is_staff %}
+                    <span class="badge bg-primary">Owner</span>
+                    {% endif %}
+                </p>
+                <p class="margin-0 text-secondary">{{ top_user.followers_count }} Members</p>
+            </div>
+        </div>
+
+        {% if top_user != user %}
+
+            {% if top_user in view.get_following %}
+
+            <form action="{% url 'unfollow' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="follow_by" id="follow_by_user" value="{{ top_user.id }}">
+                <button type="submit" class="btn btn-outline-danger btn-sm btn-sircle" style="width: 80px; height: 31px;">Leave</button>
+            </form>
+
+            {% else %}
+
+            <form action="{% url 'follow' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="follow_by" id="follow_by_user" value="{{ top_user.id }}">
+                <button type="submit"  class="btn btn-primary btn-sm btn-sircle" style="width: 80px; height: 31px;">Join</button>
+            </form>
+
+            {% endif %}
+        {% endif %}
+
+        
+
+
+        
+    </div>
+
+    {% endfor %}
+
+    <button type="button" class="btn btn-outline-primary m-3 btn-sircle" style="width: calc(100% - 32px)">See All Popular Communities</button>
+</div>
+
+<script>
+    function follow_user(user_id){
+        document.getElementById('follow_by').value = user_id
+    }
+</script>
