@@ -22,6 +22,7 @@
             </div>
         </div>
 
+        {% if user.is_authenticated %}
         {% if top_user != user %}
 
             {% if top_user in view.get_following %}
@@ -41,6 +42,7 @@
             </form>
 
             {% endif %}
+        {% endif %}
         {% endif %}
 
         
