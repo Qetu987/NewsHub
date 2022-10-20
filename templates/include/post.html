@@ -1,0 +1,57 @@
+{% load static %}
+
+{% for post in posts_list %}
+    <div class="bg-light mt-4 rounded">
+        <!-- post header -->
+        <div class="d-flex align-items-center justify-content-between p-3">
+            <div class="d-flex align-items-center">
+                <img src="{% static 'img/profile_icon.png' %}" class="profile_icon me-2">
+                <h6 class="text-dark margin-0 me-2">
+                    {{ post.owner.username }} 
+                    {% if post.owner.is_staff %}
+                        <span class="badge bg-primary">Owner</span>
+                    {% endif %}
+                </h6>
+                <p class="text-secondary margin-0" style="font-size: 14px;">2118 Thornridge Cir. Syracuse, Connecticut 35624</p>
+                
+            </div>
+            <p class="text-secondary margin-0" style="font-size: 14px;">{{ post.date|timesince }} ago</p>
+        </div>
+        <!-- end post header -->
+
+        <h3 class="text-dark margin-0 px-3 pb-2">{{ post.title }}</h3>
+       
+        <!-- post photo -->
+        {% if post.poster %}
+        <div class="d-flex justify-content-center pb-2">
+            <img src="{{ post.poster.url }}" class="rounded w-100 px-3">
+        </div>
+        {% endif %}
+        <!-- end post photo -->
+
+        {% if post.text %}
+        <div class="px-3 pb-2">
+            <p class="text-dark margin-0">{{ post.text }}</p>
+        </div>
+        {% endif %}
+
+        <!-- tags -->
+        <div class="d-flex px-3 pb-2 flex-wrap">
+            {% for tag in post.tag.all %}
+                <a href="" class="me-2" style="text-decoration: none;">#{{ tag.text }}</a>
+            {% endfor %}
+        </div>
+        <!-- end tags -->
+
+        <!-- comments and likes form -->
+        
+        <div class="d-flex px-3 pb-3">
+            <form action="">
+                <button type="submit" class="btn btn-outline-danger me-2 btn-sm">{{ post.like }} {% if post.like == 1 %} like {% else %} likes {% endif %}</button>
+            </form>
+            <button type="button" class="btn btn-outline-secondary me-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">30k comments</button>
+        </div>
+        <!-- comments and likes form -->
+    </div>
+
+{% endfor %}

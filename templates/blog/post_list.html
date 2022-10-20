@@ -1,0 +1,17 @@
+{% extends 'blog/page_layout.html' %}
+
+{% block contant %}
+        <div class="col-lg-8">
+            {% if user.is_authenticated %}
+                {% include "include/create_post.html" %}
+            {% endif %}
+
+            {% include "include/post.html" %}
+
+        </div>
+
+        <div class="col-lg-4">
+            
+        </div>
+    
+{% endblock %}

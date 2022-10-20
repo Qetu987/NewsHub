@@ -1,0 +1,46 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand text-primary" href="{% url 'home' %}">NewsHub</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- navigate -->
+            {% include "include/naw.html" %}
+
+            {% if user.is_authenticated %}
+                <div class="">
+                    <div class="dropdown dropdown-start">
+                        <button class="d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border:none; background: none;">
+                            <p class="text-dark margin-0 me-2">
+                                {{ user }} 
+                                {% if user.is_staff %}
+                                    <span class="badge bg-primary">Owner</span>
+                                {% endif %}
+                            </p>
+                            <img src="{% static 'img/profile_icon.png' %}" class="profile_icon">
+                        </button>
+                        
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <hr>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Log out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm me-2">Sign in</a>
+                <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Sign up</a>
+            {% endif %}
+            
+                
+                <!-- end auth -->
+
+        </div>
+
+    </div>
+</nav>

@@ -1,0 +1,64 @@
+.profile_icon{
+	height: 38px;
+	width: 38px;
+	border-radius: 19px;
+}
+
+.margin-0{
+	margin: 0;
+	padding: 0;
+}
+
+.width-120{
+	width: 120px !important;
+}
+
+.block_popular_header{
+	height: 76px;
+	background-position: center !important;
+	background-size: cover !important;
+}
+
+.block_popular_header_text{
+	bottom: 0;
+	left: 16px;
+}
+
+.btn-sircle{
+	border-radius: 300px !important;
+}
+
+
+.btn-lite{
+	background: #9EC5FE !important;
+	color: #0D6EFD !important;
+}
+
+.btn-lite:hover{
+	background: #6DA9FF !important;
+}
+
+
+
+
+@media only screen and (min-width: 768px) {
+  .create_post_send_button {
+    position: absolute;
+    bottom: 16px;
+	right: 16px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .create_post_send_button {
+    position: static;
+    
+    width: 100%;
+  }
+}
+
+
+
+/* comments */
+
+
