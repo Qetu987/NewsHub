@@ -1,7 +1,9 @@
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    {% if user.is_authenticated %}
     <li class="nav-item">
-        <a class="nav-link" href="#">Hot Posts</a>
+        <a class="nav-link" href="{% url 'hot_post' %}">Hot Posts</a>
     </li>
+    {% endif %}
     <li class="nav-item">
         <a class="nav-link" href="#">Liked</a>
     </li>

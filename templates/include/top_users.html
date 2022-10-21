@@ -5,7 +5,7 @@
         <h5 class="text-light position-absolute block_popular_header_text">Most popular Communities</h5>
     </div>
     
-    {% for top_user in view.get_top_users %}
+    {% for top_user in get_top_users %}
     
     <div class="d-flex justify-content-between align-items-center m-3">
         <div class="d-flex align-items-center">
@@ -25,7 +25,7 @@
         {% if user.is_authenticated %}
         {% if top_user != user %}
 
-            {% if top_user in view.get_following %}
+            {% if top_user in get_following %}
 
             <form action="{% url 'unfollow' %}" method="post">
                 {% csrf_token %}

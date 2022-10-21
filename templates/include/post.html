@@ -38,7 +38,7 @@
         <!-- tags -->
         <div class="d-flex px-3 pb-2 flex-wrap">
             {% for tag in post.tag.all %}
-                <a href="" class="me-2" style="text-decoration: none;">#{{ tag.text }}</a>
+                <a href="{% url 'tag_post' tag.text %}" class="me-2" style="text-decoration: none;">#{{ tag.text }}</a>
             {% endfor %}
         </div>
         <!-- end tags -->

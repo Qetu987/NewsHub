@@ -10,3 +10,6 @@ class Followers(models.Model):
     follow_by = models.ForeignKey(User, related_name='followers', verbose_name="Подписан на", on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True, verbose_name="дата подписки", blank=True)
     draft = models.BooleanField("Черновик", default=False)
+
+    def __str__(self):
+        return f'{self.id}_{self.owner}-{self.follow_by}'

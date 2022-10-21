@@ -23,7 +23,7 @@
 
             <input type="hidden" name="tag" id="tag_list" value="">
 
-            {% for tag in view.get_tags %}
+            {% for tag in get_tags %}
             <div class="me-2 mb-2">
                 <input type="checkbox" class="btn-check" id="{{ tag.id }}_{{ tag.text }}" autocomplete="off">
                 <label class="btn btn-outline-primary btn-sm btn-sircle" for="{{ tag.id }}_{{ tag.text }}" 
