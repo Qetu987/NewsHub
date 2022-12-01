@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Post, Reviews, Tags
+from blog.models import Post, Reviews, Tags, Like
 from django.utils.safestring import mark_safe
 
 @admin.register(Post)
@@ -31,3 +31,9 @@ class TagsAdmin(admin.ModelAdmin):
     list_display = ['id', 'text']
     list_display_links = ['id','text']
     list_search = ['id', 'text']
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'post', 'user']
+    list_display_links = ['id','post']
+    list_search = ['id', 'user']

@@ -7,37 +7,37 @@
             <div class="d-flex align-items-center">
                 <img src="{% static 'img/profile_icon.png' %}" class="profile_icon me-2">
                 <h6 class="text-dark margin-0 me-2">
-                    {{ post.owner.username }} 
-                    {% if post.owner.is_staff %}
+                    {{ post.post_data.owner.username }} 
+                    {% if post.post_data.owner.is_staff %}
                         <span class="badge bg-primary">Owner</span>
                     {% endif %}
                 </h6>
                 <p class="text-secondary margin-0" style="font-size: 14px;">2118 Thornridge Cir. Syracuse, Connecticut 35624</p>
                 
             </div>
-            <p class="text-secondary margin-0" style="font-size: 14px;">{{ post.date|timesince }} ago</p>
+            <p class="text-secondary margin-0" style="font-size: 14px;">{{ post.post_data.date|timesince }} ago</p>
         </div>
         <!-- end post header -->
 
-        <h3 class="text-dark margin-0 px-3 pb-2">{{ post.title }}</h3>
+        <h3 class="text-dark margin-0 px-3 pb-2">{{ post.post_data.title }}</h3>
        
         <!-- post photo -->
-        {% if post.poster %}
+        {% if post.post_data.poster %}
         <div class="d-flex justify-content-center pb-2">
-            <img src="{{ post.poster.url }}" class="rounded w-100 px-3">
+            <img src="{{ post.post_data.poster.url }}" class="rounded w-100 px-3">
         </div>
         {% endif %}
         <!-- end post photo -->
 
-        {% if post.text %}
+        {% if post.post_data.text %}
         <div class="px-3 pb-2">
-            <p class="text-dark margin-0">{{ post.text }}</p>
+            <p class="text-dark margin-0">{{ post.post_data.text }}</p>
         </div>
         {% endif %}
 
         <!-- tags -->
         <div class="d-flex px-3 pb-2 flex-wrap">
-            {% for tag in post.tag.all %}
+            {% for tag in post.post_data.tag.all %}
                 <a href="{% url 'tag_post' tag.text %}" class="me-2" style="text-decoration: none;">#{{ tag.text }}</a>
             {% endfor %}
         </div>
@@ -46,9 +46,15 @@
         <!-- comments and likes form -->
         
         <div class="d-flex px-3 pb-3">
-            <form action="">
-                <button type="submit" class="btn btn-outline-danger me-2 btn-sm">{{ post.like }} {% if post.like == 1 %} like {% else %} likes {% endif %}</button>
-            </form>
+            <form action="{% url 'like' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="post" id="post_for_like" value="{{ post.post_data.id }}">
+                {% if user.id in post.user_likes %}
+                    <button type="submit" class="btn btn-danger me-2 btn-sm" {% if not user.is_authenticated %} disabled {% endif %}>{{ post.post_data.post_likes }} {% if post.post_data.like > 1 %} likes {% else %} like {% endif %}</button>
+                {% else %}
+                    <button type="submit" class="btn btn-outline-danger me-2 btn-sm" {% if not user.is_authenticated %} disabled {% endif %}>{{ post.post_data.post_likes }} {% if post.post_data.like > 1 %} likes {% else %} like {% endif %}</button>
+                {% endif %}
+            </form>  
             <button type="button" class="btn btn-outline-secondary me-2 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">30k comments</button>
         </div>
         <!-- comments and likes form -->
