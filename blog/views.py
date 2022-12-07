@@ -21,13 +21,11 @@ class TagsList:
             list_follow.append(follower.follow_by)
         return list_follow
 
-class PostsList(TagsList, View):
+class Posts_list_base(TagsList, View):
     template_name = "blog/post_list.html"
     anonimys = AnonymousUser()
-    
-    def get_data(self):
-        queryset = Post.objects.annotate(post_likes=Count('post_by_likes')).filter(draft=False).order_by('-date')
-        
+
+    def get_post_data(self, queryset):
         data = list()
         for post in queryset:
             post_data = {
@@ -35,7 +33,20 @@ class PostsList(TagsList, View):
                 'user_likes': [i['user'] for i in Like.objects.values('user').filter(post=post)],
             }
             data.append(post_data)
+        return data
+    
+    def get(self, request):
+        context = self.get_data()
+        return render(request, self.template_name, context)
 
+
+class PostsList(Posts_list_base):
+    template_name = "blog/post_list.html"
+    anonimys = AnonymousUser()
+    
+    def get_data(self):
+        queryset = Post.objects.annotate(post_likes=Count('post_by_likes')).filter(draft=False).order_by('-date')
+        data = self.get_post_data(queryset)
 
         context = {
             'posts_list': data,
@@ -45,10 +56,6 @@ class PostsList(TagsList, View):
         }
 
         return context
-
-    def get(self, request):
-        context = self.get_data()
-        return render(request, self.template_name, context)
 
 class AddPost(View):
     def post(self, request):
@@ -64,18 +71,11 @@ class AddPost(View):
                 form.tag.add(Tags.objects.get_or_create(text=tag)[0])
         return redirect('home')
 
-class TagPost(PostsList):
+class TagPost(Posts_list_base):
     
     def get_data(self, slug):
         queryset = Post.objects.annotate(post_likes=Count('post_by_likes')).filter(draft=False, tag__text=slug).order_by("-date")
-
-        data = list()
-        for post in queryset:
-            post_data = {
-                'post_data': post,
-                'user_likes': [i['user'] for i in Like.objects.values('user').filter(post=post)],
-            }
-            data.append(post_data)
+        data = self.get_post_data(queryset)
 
         context = {
             'posts_list': data,
@@ -86,26 +86,13 @@ class TagPost(PostsList):
 
         return context
 
-    def get(self, request, slug):
-        context = self.get_data(slug)
-        return render(request, self.template_name, context)
-
-
-# почему наследуется от PostsList ???
-class HotPost(PostsList):
+class HotPost(Posts_list_base):
     
     def get_data(self):
         followers = [follower.follow_by for follower in self.request.user.following.all()]
         followers.append(self.request.user)
         queryset = Post.objects.annotate(post_likes=Count('post_by_likes')).filter(draft=False, owner__in=followers).order_by("-date")
-        
-        data = list()
-        for post in queryset:
-            post_data = {
-                'post_data': post,
-                'user_likes': [i['user'] for i in Like.objects.values('user').filter(post=post)],
-            }
-            data.append(post_data)
+        data = self.get_post_data(queryset)
 
         context = {
             'posts_list': data,
@@ -116,21 +103,10 @@ class HotPost(PostsList):
 
         return context
 
-    def get(self, request):
-        context = self.get_data()
-        return render(request, self.template_name, context)
-
-class LikePostSet(PostsList):
+class LikePostList(Posts_list_base):
     def get_data(self):
         queryset = Post.objects.annotate(post_likes=Count('post_by_likes')).filter(draft=False, post_by_likes__user=self.request.user).order_by("-date")
-
-        data = list()
-        for post in queryset:
-            post_data = {
-                'post_data': post,
-                'user_likes': [i['user'] for i in Like.objects.values('user').filter(post=post)],
-            }
-            data.append(post_data)
+        data = self.get_post_data(queryset)
 
         context = {
             'posts_list': data,
@@ -139,8 +115,6 @@ class LikePostSet(PostsList):
             'get_following': self.get_following() if self.request.user!=self.anonimys else None,
         }
         return context
-
-
 
 class LikePost(View):
     anonimys = AnonymousUser()
