@@ -64,9 +64,7 @@ class AddPost(View):
                 form.tag.add(Tags.objects.get_or_create(text=tag)[0])
         return redirect('home')
 
-class TagPost(TagsList, View):
-    template_name = "blog/post_list.html"
-    anonimys = AnonymousUser()
+class TagPost(PostsList):
     
     def get_data(self, slug):
         queryset = Post.objects.annotate(post_likes=Count('post_by_likes')).filter(draft=False, tag__text=slug).order_by("-date")
@@ -92,8 +90,9 @@ class TagPost(TagsList, View):
         context = self.get_data(slug)
         return render(request, self.template_name, context)
 
+
+# почему наследуется от PostsList ???
 class HotPost(PostsList):
-    template_name = "blog/post_list.html"
     
     def get_data(self):
         followers = [follower.follow_by for follower in self.request.user.following.all()]
@@ -120,6 +119,27 @@ class HotPost(PostsList):
     def get(self, request):
         context = self.get_data()
         return render(request, self.template_name, context)
+
+class LikePostSet(PostsList):
+    def get_data(self):
+        queryset = Post.objects.annotate(post_likes=Count('post_by_likes')).filter(draft=False, post_by_likes__user=self.request.user).order_by("-date")
+
+        data = list()
+        for post in queryset:
+            post_data = {
+                'post_data': post,
+                'user_likes': [i['user'] for i in Like.objects.values('user').filter(post=post)],
+            }
+            data.append(post_data)
+
+        context = {
+            'posts_list': data,
+            'get_tags': self.get_tags(),
+            'get_top_users': self.get_top_users(),
+            'get_following': self.get_following() if self.request.user!=self.anonimys else None,
+        }
+        return context
+
 
 
 class LikePost(View):
